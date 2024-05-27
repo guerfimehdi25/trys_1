@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trys_1/auth/Activity.dart';
 import 'package:trys_1/auth/Menu.dart';
-import 'package:trys_1/auth/home_page.dart.';
 import 'package:trys_1/auth/osm.dart';
 
 class Reservation extends StatefulWidget {
@@ -21,7 +20,7 @@ class _ReservationState extends State<Reservation> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => OSM()),
+        MaterialPageRoute(builder: (context) => const OSM()),
       );
     } else if (index == 1) {
       Navigator.push(

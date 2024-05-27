@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:trys_1/auth/Activity.dart';
-import 'package:trys_1/auth/list_Park.dart';
-import 'package:trys_1/auth/osm.dart';
-import 'package:trys_1/auth/resrvation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
- // Make sure to import ParkingPage
+
+import 'Activity.dart';
+import 'list_Park.dart';
+import 'osm.dart';
+import 'resrvation.dart'; // Import the ParkingPage
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -38,7 +38,7 @@ class _MenuState extends State<Menu> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => OSM()),
+        MaterialPageRoute(builder: (context) => const OSM()),
       );
     } else if (index == 1) {
       Navigator.push(
@@ -93,8 +93,8 @@ class _MenuState extends State<Menu> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: Text(
               'List of Parkings',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -105,14 +105,18 @@ class _MenuState extends State<Menu> {
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 itemCount: data.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
                   mainAxisExtent: 160,
                 ),
                 itemBuilder: (context, i) {
                   return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0), // Add rounded corners
+                    ),
                     child: Container(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Row(
@@ -124,9 +128,10 @@ class _MenuState extends State<Menu> {
                                     MaterialPageRoute(
                                       builder: (context) => ParkingPage(
                                         name: data[i]['name'],
-                                        distance: data[i]['distance'],
+                                        distance: data[i]['distance'].toDouble(),
                                         emptySpaces: data[i]['emptySpaces'],
                                         locationUrl: data[i]['locationUrl'],
+                                        imageUrl: data[i]['imageUrl'],
                                       ),
                                     ),
                                   );
@@ -135,25 +140,25 @@ class _MenuState extends State<Menu> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Row(
                             children: [
-                              Text('Distance: '),
+                              const Text('Distance: '),
                               Text(data[i]['distance'].toString()),
-                              Text(' km'),
+                              const Text(' km'),
                             ],
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Row(
                             children: [
-                              Text('Number of empty Spaces: '),
+                              const Text('Number of empty Spaces: '),
                               Text(data[i]['emptySpaces'].toString()),
                             ],
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Row(
                             children: [
-                              Text('Location: '),
+                              const Text('Location: '),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -167,7 +172,7 @@ class _MenuState extends State<Menu> {
                                 },
                                 child: Text(
                                   data[i]['locationUrl'],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.lightBlue,
                                     decoration: TextDecoration.underline,
                                   ),
@@ -177,10 +182,10 @@ class _MenuState extends State<Menu> {
                                 onPressed: () {
                                   Clipboard.setData(ClipboardData(text: data[i]['locationUrl']));
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Location copied to clipboard')),
+                                    const SnackBar(content: Text('Location copied to clipboard')),
                                   );
                                 },
-                                child: Row(
+                                child: const Row(
                                   children: [
                                     Text('copy ', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                                     Icon(Icons.content_copy),
@@ -189,7 +194,7 @@ class _MenuState extends State<Menu> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                         ],
                       ),
                     ),

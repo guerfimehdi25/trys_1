@@ -10,7 +10,7 @@ class OSM extends StatefulWidget {
 
   final String locationUrl;
 
-  OSM({super.key,  this.locationUrl =""});
+  const OSM({super.key,  this.locationUrl =""});
 
   @override
   State<OSM> createState() => _OSMState();
@@ -19,7 +19,7 @@ class OSM extends StatefulWidget {
 class _OSMState extends State<OSM> {
   String locationaddress ='Pick location';
 
-  Location location = new Location();
+  Location location = Location();
 
 
 
@@ -31,7 +31,7 @@ class _OSMState extends State<OSM> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => OSM()),
+        MaterialPageRoute(builder: (context) => const OSM()),
       );
     } else if (index == 1) {
       Navigator.push(

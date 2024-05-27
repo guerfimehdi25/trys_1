@@ -1,20 +1,24 @@
+// ParkingPage.dart
 import 'package:flutter/material.dart';
-import 'package:trys_1/auth/Activity.dart';
-import 'package:trys_1/auth/Menu.dart';
-import 'package:trys_1/auth/osm.dart';
-import 'package:trys_1/auth/resrvation.dart';
-
+import 'package:flutter/services.dart';
+import 'Activity.dart';
+import 'Menu.dart';
+import 'osm.dart';
+import 'resrvation.dart';
 class ParkingPage extends StatefulWidget {
   final String name;
   final double distance;
   final int emptySpaces;
   final String locationUrl;
+  final String imageUrl;
 
   const ParkingPage({
+    super.key,
     required this.name,
     required this.distance,
     required this.emptySpaces,
     required this.locationUrl,
+    required this.imageUrl,
   });
 
   @override
@@ -22,12 +26,9 @@ class ParkingPage extends StatefulWidget {
 }
 
 class _ParkingPageState extends State<ParkingPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   int currentIndex = 3;
+
+
   void onTabTapped(int index) {
     setState(() {
       currentIndex = index;
@@ -35,7 +36,7 @@ class _ParkingPageState extends State<ParkingPage> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => OSM()),
+        MaterialPageRoute(builder: (context) => const OSM()),
       );
     } else if (index == 1) {
       Navigator.push(
@@ -54,12 +55,14 @@ class _ParkingPageState extends State<ParkingPage> {
       );
     }
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber,
-        title: Text('Parking Details'),
+        title: const Text('Parking Details'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -91,48 +94,99 @@ class _ParkingPageState extends State<ParkingPage> {
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 width: double.infinity,
                 height: 430,
-                child: Image(
-                  image: AssetImage('assets/images/park.jpg'),
+                child: Image.network(
+                  widget.imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Text('Failed to load image');
+                    return const Text('Failed to load image');
                   },
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+
+                 Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Reservation(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: const Text(
+                  'Reserve',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                widget.name,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text('Distance: ${widget.distance} km'),
+              const SizedBox(height: 10),
+              Text('Empty Spaces: ${widget.emptySpaces}'),
+              const SizedBox(height: 10),
               Row(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Reserve'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber, // Set the background color of the button
-                      foregroundColor: Colors.black, // Set the text color of the button
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0), // Set the border radius of the button
-                      ),
+                  const Text('Location: '),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OSM(locationUrl: widget.locationUrl),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          widget.locationUrl,
+                          style: const TextStyle(
+                            color: Colors.lightBlue,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: widget.locationUrl));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Location copied to clipboard')),
+                            );
+                          },
+                          child: const Row(
+                            children: [
+                              Text(
+                                'copy ',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Icon(Icons.content_copy),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Text('${widget.name}',style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
-                      Text('Distance: ${widget.distance.toStringAsFixed(2)} km'),
-                      Text('Empty Spaces: ${widget.emptySpaces}'),
-                    ],
-                  )
-
-                ],
-              )
-
             ],
           ),
         ),

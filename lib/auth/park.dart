@@ -4,6 +4,8 @@ import 'package:trys_1/auth/Activity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ParkingListPage extends StatefulWidget {
+  const ParkingListPage({super.key});
+
   @override
   _ParkingListPageState createState() => _ParkingListPageState();
 }
@@ -62,12 +64,12 @@ class _ParkingListPageState extends State<ParkingListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Parkings à proximité'),
+        title: const Text('Parkings à proximité'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _parkingsCollection.snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) return CircularProgressIndicator();
+          if (!snapshot.hasData) return const CircularProgressIndicator();
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               final parking = Parking(
@@ -89,7 +91,7 @@ class _ParkingListPageState extends State<ParkingListPage> {
                       onPressed: () {
                         _launchUrl(parking.locationUrl);
                       },
-                      child: Text('Location'),
+                      child: const Text('Location'),
                     ),
                   ],
                 ),
@@ -98,7 +100,7 @@ class _ParkingListPageState extends State<ParkingListPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Activity(),
+                      builder: (context) => const Activity(),
                     ),
                   );
                 },

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:trys_1/auth/Menu.dart';
 import 'package:trys_1/auth/osm.dart';
 import 'package:trys_1/auth/resrvation.dart';
-import 'package:trys_1/auth/home_page.dart';
 class Activity extends StatefulWidget {
   const Activity({super.key});
 
@@ -20,7 +19,7 @@ class _ActivityState extends State<Activity> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => OSM()),
+        MaterialPageRoute(builder: (context) => const OSM()),
       );
     } else if (index == 1) {
       Navigator.push(

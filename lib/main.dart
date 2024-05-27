@@ -1,48 +1,35 @@
-
+// main.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:trys_1/auth/Menu.dart';
-import 'package:trys_1/auth/list_Park.dart';
-import 'package:trys_1/auth/login_screen.dart';
-import 'package:trys_1/auth/osm.dart';
-import 'package:trys_1/auth/park.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'firebase_options.dart';
 
-
-
-void main() async{
-
-// ...
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
-
-
 }
+
 class ParkingModel {
   final String name;
   final double distance;
   final int emptySpaces;
+  final String locationUrl;
+  final String imageUrl;
 
   ParkingModel({
     required this.name,
     required this.distance,
     required this.emptySpaces,
+    required this.locationUrl,
+    required this.imageUrl,
   });
 }
-//class MyApp
-//Stateless
-//Stateful
 
 class MyApp extends StatefulWidget {
-
-
-
   const MyApp({super.key});
 
   @override
@@ -50,35 +37,53 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  List<ParkingModel> data = [];
 
-  List <QueryDocumentSnapshot>  data=[] ;
-  getData() async
-  {
-    QuerySnapshot querySnapshot=  await FirebaseFirestore.instance.collection("_parkingsCollection").get();
-    data.addAll(querySnapshot.docs);
-    setState(() {
-
-    });
+  Future<void> getData() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("_parkingsCollection").get();
+    data = querySnapshot.docs.map((doc) {
+      return ParkingModel(
+        name: doc['name'],
+        distance: doc['distance'],
+        emptySpaces: doc['emptySpaces'],
+        imageUrl: doc['imageUrl'],
+        locationUrl: doc['locationUrl'],
+      );
+    }).toList();
+    setState(() {});
   }
+
   @override
   void initState() {
     super.initState();
-
+    getData();
   }
+
   @override
   Widget build(BuildContext context) {
-    final String parkingName = 'Tony Garnier'; // Example parking name
-    final double parkingDistance = 2.5; // Example distance
-    final int parkingEmptySpaces = 10; // Example empty spaces
-    final String parkingLocationUrl = 'https://example.com';
-    return   MaterialApp(
+    if (data.isEmpty) {
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+
+    ParkingModel parking = data[0];
+
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
+      /*home: ParkingPage(
+        name: parking.name,
+        distance: parking.distance,
+        emptySpaces: parking.emptySpaces,
+        locationUrl: parking.locationUrl,
+        imageUrl: parking.imageUrl,
+      ),
+
+       */
       home:Menu(),
-
-
-      //Text
     );
   }
 }
-
-

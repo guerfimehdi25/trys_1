@@ -345,7 +345,7 @@ child:
 
                                          Navigator.push(context,
                                            MaterialPageRoute(
-                                             builder: (context) =>  OSM(),
+                                             builder: (context) =>  const OSM(),
                                            ),
                                          );
                                        } on FirebaseAuthException {
