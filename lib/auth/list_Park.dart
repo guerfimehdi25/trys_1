@@ -111,13 +111,11 @@ class _ParkingPageState extends State<ParkingPage> {
               const SizedBox(height: 10),
           Center(
             child: ElevatedButton(
-              onPressed: () async {
-                const String url = 'https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
+              onPressed: ()  {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  Reservation()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amber,

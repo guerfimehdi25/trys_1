@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trys_1/auth/Activity.dart';
 import 'package:trys_1/auth/Menu.dart';
 import 'package:trys_1/auth/osm.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Reservation extends StatefulWidget {
   const Reservation({super.key});
@@ -73,7 +74,30 @@ class _ReservationState extends State<Reservation> {
           ),
         ],
       ),
-
+      body:
+      Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            const String url = 'https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN';
+            if (await canLaunch(url)) {
+              await launch(url);
+            } else {
+              throw 'Could not launch $url';
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.amber,
+            foregroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          child: const Text(
+            'Reserve',
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+      ),
 
     );
   }
