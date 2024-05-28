@@ -1,6 +1,7 @@
 // ParkingPage.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'Activity.dart';
 import 'Menu.dart';
 import 'osm.dart';
@@ -108,28 +109,31 @@ class _ParkingPageState extends State<ParkingPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-
-                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Reservation(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                child: const Text(
-                  'Reserve',
-                  style: TextStyle(fontSize: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                const String url = 'https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
+              child: const Text(
+                'Reserve',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+          ),
+
+
               const SizedBox(height: 5),
               Text(
                 widget.name,

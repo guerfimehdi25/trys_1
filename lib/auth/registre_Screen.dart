@@ -2,8 +2,9 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:trys_1/auth/home_page.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:trys_1/auth/osm.dart';
 
   class Registre extends StatefulWidget {
   const Registre({super.key});
@@ -466,7 +467,7 @@ class _RegistreState extends State<Registre> {
                             addUser() ;
                             Navigator.push(context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Parkings(),
+                                  builder: (context) =>  const OSM(),
                                 )
                             );
                           }
