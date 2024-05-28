@@ -47,7 +47,7 @@ class _ParkingPageState extends State<ParkingPage> {
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Reservation()),
+        MaterialPageRoute(builder: (context) => Reservation()),
       );
     } else if (index == 3) {
       Navigator.push(
@@ -74,8 +74,8 @@ class _ParkingPageState extends State<ParkingPage> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.directions_car),
-            label: 'Parking',
+            icon: Icon(Icons.location_on),
+            label: 'Map',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home_filled),

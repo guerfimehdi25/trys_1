@@ -88,12 +88,15 @@ class _RegistreState extends State<Registre> {
     }
 
     String? validatepassword(String? value) {
+      const patternn = r"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}";
+
+      final regex = RegExp(patternn);
 
 
       if (value == null || value.isEmpty ||value.length<7) {
 
 
-        return '8Characters,1Upper Letter,1Lower Let,1Digit,1SpecialCharacter.';
+        return '8Characters,1Upper Letter,1Lower Letter,1Digit.';
 
       }
 

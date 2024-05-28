@@ -48,7 +48,7 @@ class _MenuState extends State<Menu> {
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Reservation()),
+        MaterialPageRoute(builder: (context) => Reservation()),
       );
     } else if (index == 3) {
       Navigator.push(

@@ -69,14 +69,14 @@ class _loginScreenState extends State<loginScreen> {
 
      String? validatepassword(String? value) {
 
-       const patternn = r"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\><*~]).{8,}";
+       const patternn = r"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}";
 
        final regex = RegExp(patternn);
 
        if (value == null || value.isEmpty || !regex.hasMatch(value)||value.length<7) {
 
 
-         return '8Characters,1Upper Letter,1Lower Let,1Digit,1SpecialCharacter.';
+         return '8Characters,1Upper Letter,1Lower Letter,1Digit';
 
        }
 
@@ -87,14 +87,7 @@ class _loginScreenState extends State<loginScreen> {
 
        appBar: AppBar(
          actions: [
-          CloseButton(
-color: Colors.black,
-            onPressed: () {
 
-              Navigator.pop(context);
-
-            },
-          )
          ],
        ),
        /*floatingActionButton: FloatingActionButton(
