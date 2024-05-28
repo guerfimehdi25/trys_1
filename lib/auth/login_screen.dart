@@ -275,116 +275,84 @@ child:
 
                                child: InkWell(
                                  child: ElevatedButton(
-
                                    style: ElevatedButton.styleFrom(
-
                                      backgroundColor: Colors.amber, // Set the background color of the button
-
                                      foregroundColor: Colors.black, // Set the text color of the button
-
                                      shape: RoundedRectangleBorder(
-
                                        borderRadius: BorderRadius.circular(10.0), // Set the border radius of the button
-
                                      ),
-
                                    ),
-
-
-                                   onPressed: () async
-                                   {
-
-
-
+                                   onPressed: () async {
                                      if (_formKey.currentState!.validate()) {
                                        try {
-                                         final credential = await FirebaseAuth
-                                             .instance
-                                             .signInWithEmailAndPassword(
+                                         final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
                                            email: _email.text.trim(),
                                            password: _password.text.trim(),
                                          );
 
-
-                                         /*
-                                       void _showMessage() {
-
-                                         Timer(Duration(seconds: 5), () {
-
-                                           setState(() {
-
-                                             _message = '';
-
-                                           });
-
-                                         });
-
-                                       }
-
-                                        */
-                                         /*  void _validateInputs() {
-                                         if (_email.text == 'hh' && _password.text == 'password') {
-                                           setState(() {
-                                             _message = 'Login correct';
-                                           });
-                                           _showMessage();
-                                         } else {
-                                           setState(() {
-                                             _message = 'Incorrect login';
-                                           });
-                                           _showMessage();
-                                         }
-                                       } */
-
-                                         Navigator.push(context,
+                                         Navigator.push(
+                                           context,
                                            MaterialPageRoute(
-                                             builder: (context) =>  const OSM(),
+                                             builder: (context) => const OSM(),
                                            ),
                                          );
-                                       } on FirebaseAuthException {
-                                         if (_email.text == "") {
-
-
-                                           AwesomeDialog(
-                                             context: context,
-                                             dialogType: DialogType.error,
-                                             animType: AnimType.rightSlide,
-                                             title: 'Error ',
-                                             desc: 'Please enter your email ',
-                                             btnOkOnPress: () {},
-                                           ).show();
-                                         } else
-                                         if (_password.text =='') {
-
-                                           AwesomeDialog(
-                                             context: context,
-                                             dialogType: DialogType.error,
-                                             animType: AnimType.rightSlide,
-                                             title: 'Error',
-                                             desc: 'please enter your password',
-                                             btnOkOnPress: () {},
-                                           ).show();
+                                       } on FirebaseAuthException catch (e) {
+                                         String errorMessage;
+                                         if (e.code == 'user-not-found') {
+                                           errorMessage = 'No user found for that email.';
+                                         } else if (e.code == 'wrong-password') {
+                                           errorMessage = 'Wrong password provided for that user.';
+                                         } else {
+                                           errorMessage = 'An error occurred. Please try again.';
                                          }
+
+                                         AwesomeDialog(
+                                           context: context,
+                                           dialogType: DialogType.error,
+                                           animType: AnimType.rightSlide,
+                                           title: 'Error',
+                                           desc: errorMessage,
+                                           btnOkOnPress: () {},
+                                         ).show();
+                                       } catch (e) {
+                                         // Catch any other exceptions
+                                         AwesomeDialog(
+                                           context: context,
+                                           dialogType: DialogType.error,
+                                           animType: AnimType.rightSlide,
+                                           title: 'Error',
+                                           desc: 'An unexpected error occurred. Please try again.',
+                                           btnOkOnPress: () {},
+                                         ).show();
                                        }
+                                     } else {
+                                       // Handle the case where the email or password fields are empty
+                                       String errorMessage;
+                                       if (_email.text.isEmpty) {
+                                         errorMessage = 'Please enter your email.';
+                                       } else if (_password.text.isEmpty) {
+                                         errorMessage = 'Please enter your password.';
+                                       } else {
+                                         errorMessage = 'Please fill in all fields.';
+                                       }
+
+                                       AwesomeDialog(
+                                         context: context,
+                                         dialogType: DialogType.error,
+                                         animType: AnimType.rightSlide,
+                                         title: 'Error',
+                                         desc: errorMessage,
+                                         btnOkOnPress: () {},
+                                       ).show();
                                      }
-                                     },
-
-
-
-
-
-
-                                   child:  const Text(
-
+                                   },
+                                   child: const Text(
                                      'Login',
-
                                      style: TextStyle(fontSize: 20),
-
-
                                    ),
-
                                  ),
                                ),
+
 
                              ),
 

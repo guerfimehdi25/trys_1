@@ -86,7 +86,7 @@ class _MyAppState extends State<MyApp> {
       ),
 
        */
-      home:Reservation(),
+      home:Splash(),
     );
   }
 }
