@@ -240,9 +240,9 @@ child:
                                  await FirebaseAuth.instance.sendPasswordResetEmail(email:_email.text);
                                  AwesomeDialog(
                                    context: context,
-                                   dialogType: DialogType.error,
+                                   dialogType: DialogType.success,
                                    animType: AnimType.rightSlide,
-                                   title: 'Error ',
+                                   title: 'Email Sent Successfully ',
                                    desc: 'check your email we have been sent link to reset your password',
                                    btnOkOnPress: () {},
                                  ).show();
