@@ -100,7 +100,7 @@ class _ParkingListPageState extends State<ParkingListPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Activity(),
+                      builder: (context) => const Activity(name: '',),
                     ),
                   );
                 },

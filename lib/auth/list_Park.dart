@@ -6,6 +6,7 @@ import 'Activity.dart';
 import 'Menu.dart';
 import 'osm.dart';
 import 'resrvation.dart';
+
 class ParkingPage extends StatefulWidget {
   final String name;
   final double distance;
@@ -29,7 +30,6 @@ class ParkingPage extends StatefulWidget {
 class _ParkingPageState extends State<ParkingPage> {
   int currentIndex = 3;
 
-
   void onTabTapped(int index) {
     setState(() {
       currentIndex = index;
@@ -42,12 +42,12 @@ class _ParkingPageState extends State<ParkingPage> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity()),
+        MaterialPageRoute(builder: (context) => const Activity(name: '',)),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Reservation()),
+        MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
       );
     } else if (index == 3) {
       Navigator.push(
@@ -56,7 +56,6 @@ class _ParkingPageState extends State<ParkingPage> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -109,29 +108,27 @@ class _ParkingPageState extends State<ParkingPage> {
                 ),
               ),
               const SizedBox(height: 10),
-          Center(
-            child: ElevatedButton(
-              onPressed: ()  {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>  Reservation()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Reserve',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
-              child: const Text(
-                'Reserve',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ),
-
-
               const SizedBox(height: 5),
               Text(
                 widget.name,

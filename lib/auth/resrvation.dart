@@ -35,17 +35,30 @@ class Payment {
 }
 
 class Reservation extends StatefulWidget {
+
+  final String name;
+
+
+  const Reservation({
+    super.key,
+    required this.name,
+
+  });
   @override
   State<Reservation> createState() => _ReservationState();
 }
 
 class _ReservationState extends State<Reservation> {
+
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _obscureText = true;
   int currentIndex = 2;
   late String documentId;
   bool isLoggedIn = false;
+
+
+
 
 
   void updateId(BuildContext context) async {
@@ -92,12 +105,12 @@ class _ReservationState extends State<Reservation> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity()),
+        MaterialPageRoute(builder: (context) => const Activity(name: '',)),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Reservation()),
+        MaterialPageRoute(builder: (context) => Reservation(name:widget.name)),
       );
     } else if (index == 3) {
       Navigator.push(
@@ -223,6 +236,22 @@ class _ReservationState extends State<Reservation> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Reservation for Parking: '),
+                Text('${widget.name}',style: TextStyle(color: Colors.blue ,fontWeight: FontWeight.bold),),
+              ],
+            ) ,
+
+            SizedBox(
+              height: 5,
+            ),
+            Text('First to Reserve go to Page Menu and choose your Parking !!',style: TextStyle(color: Colors.red ,fontWeight: FontWeight.bold),),
+            SizedBox(
+              height: 5,
+            ),
+
             Form(
               autovalidateMode: AutovalidateMode.always,
               child: TextFormField(
@@ -285,7 +314,7 @@ class _ReservationState extends State<Reservation> {
               ),
               child: const Text('Login', style: TextStyle(fontSize: 20)),
             ),
-            if (isLoggedIn)
+            if (isLoggedIn && widget.name != "enter name of parking!")
               FutureBuilder<Payment>(
                 future: getPaymentData(),
                 builder: (context, snapshot) {
@@ -303,30 +332,7 @@ class _ReservationState extends State<Reservation> {
                     child: Column(
                       children: [
                         Text('Current ID: ${payment.id}'),
-                        Text('Check Status: ${payment.check}'),
-                        SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () async {
-                            updateId(context);
-                            const String url = 'https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN';
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber,
-                            foregroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          child: const Text(
-                            'Reserve',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
+
                         SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: ()  {
@@ -345,6 +351,40 @@ class _ReservationState extends State<Reservation> {
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () async {
+                            updateId(context);
+                            const String url = 'https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN';
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                            // Define the name to pass to the Activity page
+
+
+                            // Navigate to the Activity page with the name parameter
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Activity(name:widget.name),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.amber,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          child: const Text(
+                            'Reserve',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+
                       ],
                     ),
                   );
@@ -355,4 +395,5 @@ class _ReservationState extends State<Reservation> {
       ),
     );
   }
+
 }

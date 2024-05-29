@@ -12,6 +12,8 @@ class OSM extends StatefulWidget {
 
   const OSM({super.key,  this.locationUrl =""});
 
+  get name => "enter name of parking!";
+
   @override
   State<OSM> createState() => _OSMState();
 }
@@ -36,12 +38,12 @@ class _OSMState extends State<OSM> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity()),
+        MaterialPageRoute(builder: (context) => const Activity(name: '',)),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Reservation()),
+        MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
       );
     } else if (index == 3) {
       Navigator.push(

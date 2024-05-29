@@ -10,6 +10,8 @@ import 'resrvation.dart'; // Import the ParkingPage
 class Menu extends StatefulWidget {
   const Menu({super.key});
 
+  get name => "enter name of parking!";
+
   @override
   State<Menu> createState() => _MenuState();
 }
@@ -43,12 +45,12 @@ class _MenuState extends State<Menu> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity()),
+        MaterialPageRoute(builder: (context) => const Activity(name: '',)),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Reservation()),
+        MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
       );
     } else if (index == 3) {
       Navigator.push(
