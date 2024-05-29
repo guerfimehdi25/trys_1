@@ -45,7 +45,7 @@ class _MenuState extends State<Menu> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity(name: '',)),
+        MaterialPageRoute(builder: (context) => const Activity(name: '', hour: 0,)),
       );
     } else if (index == 2) {
       Navigator.push(
@@ -76,8 +76,8 @@ class _MenuState extends State<Menu> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.directions_car),
-            label: 'Parking',
+            icon: Icon(Icons.location_on),
+            label: 'Map',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home_filled),

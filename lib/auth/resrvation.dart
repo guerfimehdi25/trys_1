@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trys_1/auth/Activity.dart';
@@ -105,7 +106,7 @@ class _ReservationState extends State<Reservation> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity(name: '',)),
+        MaterialPageRoute(builder: (context) => const Activity(name:'', hour:0,)),
       );
     } else if (index == 2) {
       Navigator.push(
@@ -361,14 +362,19 @@ class _ReservationState extends State<Reservation> {
                             } else {
                               throw 'Could not launch $url';
                             }
-                            // Define the name to pass to the Activity page
+                            // Fetch the hour value from Firebase
+                            DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(documentId)
+                                .get();
+                            int hour = documentSnapshot.get('hour');
 
 
                             // Navigate to the Activity page with the name parameter
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Activity(name:widget.name),
+                                builder: (context) => Activity(name:widget.name,hour: hour),
                               ),
                             );
                           },

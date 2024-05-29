@@ -1,16 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:trys_1/auth/Menu.dart';
-import 'package:trys_1/auth/osm.dart';
-import 'package:trys_1/auth/reservation.dart';
+import 'dart:async';
+
 import 'package:trys_1/auth/resrvation.dart';
+
+import 'Menu.dart';
+import 'osm.dart';
 
 class Activity extends StatefulWidget {
   final String name;
+  final int hour;
 
   const Activity({
     super.key,
     required this.name,
+    required this.hour,
   });
 
   @override
@@ -18,44 +21,41 @@ class Activity extends StatefulWidget {
 }
 
 class _ActivityState extends State<Activity> {
-  DocumentSnapshot? userData; // Store user data
+  Timer? _timer;
+  Duration _duration = Duration();
 
   @override
   void initState() {
     super.initState();
+    _duration = Duration(hours: widget.hour);
+    startTimer();
   }
 
-  int currentIndex = 1;
-
-  void onTabTapped(int index) {
-    setState(() {
-      currentIndex = index;
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_duration.inSeconds > 0) {
+          _duration = _duration - Duration(seconds: 1);
+        } else {
+          _timer?.cancel();
+        }
+      });
     });
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const OSM()),
-      );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Activity(name: widget.name)),
-      );
-    } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
-      );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Menu()),
-      );
-    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    String strDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = strDigits(_duration.inHours);
+    final minutes = strDigits(_duration.inMinutes.remainder(60));
+    final seconds = strDigits(_duration.inSeconds.remainder(60));
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber,
@@ -67,8 +67,25 @@ class _ActivityState extends State<Activity> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         elevation: 9,
-        currentIndex: currentIndex,
-        onTap: onTabTapped,
+        currentIndex: 1,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OSM()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Menu()),
+            );
+          }
+        },
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         items: const [
@@ -93,6 +110,7 @@ class _ActivityState extends State<Activity> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -103,6 +121,11 @@ class _ActivityState extends State<Activity> {
                   style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
                 ),
               ],
+            ),
+            const SizedBox(height: 20),
+            Text(
+              '$hours:$minutes:$seconds',
+              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
             ),
           ],
         ),

@@ -38,7 +38,7 @@ class _OSMState extends State<OSM> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity(name: '',)),
+        MaterialPageRoute(builder: (context) => const Activity(name: '', hour: 0,)),
       );
     } else if (index == 2) {
       Navigator.push(

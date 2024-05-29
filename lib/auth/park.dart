@@ -1,113 +1,151 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trys_1/auth/Activity.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:trys_1/auth/resrvation.dart';
+import 'dart:async';
 
-class ParkingListPage extends StatefulWidget {
-  const ParkingListPage({super.key});
+import 'Menu.dart';
+import 'osm.dart';
 
-  @override
-  _ParkingListPageState createState() => _ParkingListPageState();
-}
-class Parking {
-
-  final String id;
-
+class Activity extends StatefulWidget {
   final String name;
+  final int hour;
 
-  final double distance;
-
-  final int emptySpaces;
-
-  final String locationUrl;
-
-
-
-
-  Parking({
-
-    required this.id,
-
+  const Activity({
+    super.key,
     required this.name,
-
-    required this.distance,
-
-    required this.emptySpaces,
-
-    required this.locationUrl,
-
-
-
+    required this.hour,
   });
 
+  @override
+  State<Activity> createState() => _ActivityState();
 }
-class _ParkingListPageState extends State<ParkingListPage> {
 
-  final CollectionReference _parkingsCollection =
-  FirebaseFirestore.instance.collection('parkings');
-  Future<void> _launchUrl(String url) async {
+class _ActivityState extends State<Activity> {
+  Timer? _timer;
+  Duration _duration = Duration();
 
-    if (await canLaunchUrl(Uri.parse(url))) {
-
-      await launchUrl(Uri.parse(url));
-
-    } else {
-
-      throw 'Could not launch $url';
-
-    }
-
+  @override
+  void initState() {
+    super.initState();
+    _duration = Duration(hours: widget.hour);
+    startTimer();
   }
 
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_duration.inSeconds > 0) {
+          _duration = _duration - Duration(seconds: 1);
+        } else {
+          _timer?.cancel();
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String strDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = strDigits(_duration.inHours);
+    final minutes = strDigits(_duration.inMinutes.remainder(60));
+    final seconds = strDigits(_duration.inSeconds.remainder(60));
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Parkings à proximité'),
+        backgroundColor: Colors.amber,
+        title: const Text(
+          'Activity',
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _parkingsCollection.snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) return const CircularProgressIndicator();
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              final parking = Parking(
-                id: document.id,
-                name: document['name'],
-                distance: document['distance'],
-                emptySpaces: document['emptySpaces'],
-                locationUrl: document['locationUrl'],
-
-              );
-              return ListTile(
-                title: Text(parking.name),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Distance: ${parking.distance} km'),
-                    Text('Empty spaces: ${parking.emptySpaces}'),
-                    TextButton(
-                      onPressed: () {
-                        _launchUrl(parking.locationUrl);
-                      },
-                      child: const Text('Location'),
-                    ),
-                  ],
-                ),
-
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Activity(name: '',),
-                    ),
-                  );
-                },
-              );
-            }).toList(),
-          );
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        elevation: 9,
+        currentIndex: 1,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OSM()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Menu()),
+            );
+          }
         },
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: 'Activity',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.event_available),
+            label: 'Reservation',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu),
+            label: 'Menu',
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Reservation for Parking: '),
+                Text(
+                  widget.name,
+                  style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.amber,
+                  width: 2,
+                ),
+              ),
+              child: Text(
+                '$hours:$minutes:$seconds',
+                style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
