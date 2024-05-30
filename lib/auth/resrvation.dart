@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trys_1/auth/Activity.dart';
@@ -135,11 +135,11 @@ class _ReservationState extends State<Reservation> {
           isLoggedIn = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login successful!')),
+          const SnackBar(content: Text('Login successful!')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Email or password is incorrect')),
+          const SnackBar(content: Text('Email or password is incorrect')),
         );
       }
     } catch (e) {
@@ -240,16 +240,16 @@ class _ReservationState extends State<Reservation> {
             Row(
              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Reservation for Parking: '),
-                Text('${widget.name}',style: TextStyle(color: Colors.blue ,fontWeight: FontWeight.bold),),
+                const Text('Reservation for Parking: '),
+                Text(widget.name,style: const TextStyle(color: Colors.blue ,fontWeight: FontWeight.bold),),
               ],
             ) ,
 
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
-            Text('First to Reserve go to Page Menu and choose your Parking !!',style: TextStyle(color: Colors.red ,fontWeight: FontWeight.bold),),
-            SizedBox(
+            const Text('First to Reserve go to Page Menu and choose your Parking !!',style: TextStyle(color: Colors.red ,fontWeight: FontWeight.bold),),
+            const SizedBox(
               height: 5,
             ),
 
@@ -305,26 +305,42 @@ class _ReservationState extends State<Reservation> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => login(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
+              onPressed: () {  login(context);
+
+    if ( widget.name == "enter name of parking!") {
+    AwesomeDialog(
+    context: context,
+    dialogType: DialogType.error,
+    animType: AnimType.rightSlide,
+    title: 'choose your Parking',
+    desc: 'First you must choose your parking from Menu',
+    btnOkOnPress: () {},
+    ).show();
+    }
+
+
+  } ,
+                style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber,
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
+            ) ,
               child: const Text('Login', style: TextStyle(fontSize: 20)),
             ),
+
             if (isLoggedIn && widget.name != "enter name of parking!")
+
               FutureBuilder<Payment>(
                 future: getPaymentData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData) {
-                    return Center(child: Text('No data found'));
+                    return const Center(child: Text('No data found'));
                   }
 
                   Payment payment = snapshot.data!;
@@ -334,7 +350,7 @@ class _ReservationState extends State<Reservation> {
                       children: [
                         Text('Current ID: ${payment.id}'),
 
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: ()  {
                             updateId(context);
@@ -352,7 +368,7 @@ class _ReservationState extends State<Reservation> {
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () async {
                             updateId(context);

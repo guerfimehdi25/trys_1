@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:trys_1/auth/resrvation.dart';
+import 'dart:async';
 
 import 'Menu.dart';
 import 'osm.dart';
@@ -123,9 +122,27 @@ class _ActivityState extends State<Activity> {
               ],
             ),
             const SizedBox(height: 20),
-            Text(
-              '$hours:$minutes:$seconds',
-              style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.amber,
+                  width: 2,
+                ),
+              ),
+              child: Text(
+                '$hours:$minutes:$seconds',
+                style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
