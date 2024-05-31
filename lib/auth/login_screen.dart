@@ -47,7 +47,7 @@ class _loginScreenState extends State<loginScreen> {
    {
 
     super.initState();
-    createDatabase();
+  //  createDatabase();
   }
    @override
   Widget build(BuildContext context) {
@@ -266,12 +266,7 @@ child:
                                width: double.infinity,
 
                                height: 60.0,
-                               decoration: BoxDecoration(
-                                 color: Colors.blue,
-                                 borderRadius: BorderRadius.circular(10.0),
 
-
-                               ),
 
                                child: InkWell(
                                  child: ElevatedButton(
@@ -409,7 +404,7 @@ child:
 
    }
 
-   void createDatabase()async
+    /*  void createDatabase()async
    {
      database =await openDatabase(
        'todo.db',
@@ -429,8 +424,8 @@ child:
            print('database opened');
          }
      );
-   }
-   void insertToDatabase()async
+   } */
+  /* void insertToDatabase()async
    {
       await database.transaction((txn) async
      {
@@ -442,7 +437,7 @@ child:
       });
 
      });
-   }
+   } */
 }
 
 
