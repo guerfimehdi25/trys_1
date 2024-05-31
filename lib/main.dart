@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:trys_1/auth/Menu.dart';
+import 'package:trys_1/auth/Splash.dart';
 import 'package:trys_1/auth/login_screen.dart';
 
 import 'firebase_options.dart';
@@ -86,7 +87,7 @@ class _MyAppState extends State<MyApp> {
       ),
 
        */
-      home:loginScreen(),
+      home:Splash(),
     );
   }
 }
