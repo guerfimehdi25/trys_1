@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trys_1/auth/login_screen.dart';
 
 import 'Activity.dart';
 import 'list_Park.dart';
@@ -24,6 +27,20 @@ class _MenuState extends State<Menu> {
     data.addAll(querySnapshot.docs);
     setState(() {});
   }
+  void logout() async {
+    // Clear the user's login status
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('isLoggedIn');
+
+    // Perform the logout action, for example, if you're using Firebase Authentication:
+    FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginScreen()));
+
+
+
+  }
+
+
 
   int currentIndex = 3;
 
@@ -65,6 +82,17 @@ class _MenuState extends State<Menu> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber,
+        actions: [
+          IconButton(
+            onPressed:()
+            {
+
+              logout();
+
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
         title: const Text('Menu', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black)),
       ),
       bottomNavigationBar: BottomNavigationBar(
