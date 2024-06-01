@@ -48,8 +48,8 @@ class _RegistreState extends State<Registre> {
       'FirstName': FirstName.text, // John Doe
       'LastName':LastName.text, // Stokes and Sons
       'Email':_email.text ,
-      'Phone Number':PhoneNumber.text ,
-      'Vehicule registration number':VehiculeRegistractionNumber.text ,
+      'Phone Number':PhoneNumber.hashCode ,
+      'Vehicule registration number':VehiculeRegistractionNumber.hashCode ,
       'Type of vehicule':TypeOfVehicule.text ,
       'Brand':VehiculeBrand.text ,
       'password':_password.text ,
@@ -64,7 +64,7 @@ class _RegistreState extends State<Registre> {
   {
 
     super.initState();
-    createDatabase();
+    //createDatabase();
   }
 
 
@@ -497,6 +497,7 @@ class _RegistreState extends State<Registre> {
 
     );
   }
+  /*
   void createDatabase()async
   {
     database =await openDatabase(
@@ -534,6 +535,8 @@ class _RegistreState extends State<Registre> {
 
     });
   }
+
+   */
 }
 
 

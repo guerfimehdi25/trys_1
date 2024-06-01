@@ -22,6 +22,8 @@ class Activity extends StatefulWidget {
 class _ActivityState extends State<Activity> {
   Timer? _timer;
   Duration _duration = Duration();
+  DateTime? startTime;
+  bool timerStarted = false;
 
   @override
   void initState() {
@@ -31,10 +33,12 @@ class _ActivityState extends State<Activity> {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    startTime = DateTime.now(); // Capture the current date
+    timerStarted = true;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_duration.inSeconds > 0) {
-          _duration = _duration - Duration(seconds: 1);
+          _duration = _duration - const Duration(seconds: 1);
         } else {
           _timer?.cancel();
         }
@@ -54,6 +58,8 @@ class _ActivityState extends State<Activity> {
     final hours = strDigits(_duration.inHours);
     final minutes = strDigits(_duration.inMinutes.remainder(60));
     final seconds = strDigits(_duration.inSeconds.remainder(60));
+
+    final date = startTime != null ? "${strDigits(startTime!.day)}/${strDigits(startTime!.month)}/${startTime!.year}" : "";
 
     return Scaffold(
       appBar: AppBar(
@@ -122,8 +128,16 @@ class _ActivityState extends State<Activity> {
               ],
             ),
             const SizedBox(height: 20),
+            if (timerStarted) ...[
+              Text(
+                'Date: $date',
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+            ],
+            const SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),

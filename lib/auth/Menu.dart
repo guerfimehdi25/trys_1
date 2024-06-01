@@ -34,6 +34,7 @@ class _MenuState extends State<Menu> {
 
     // Perform the logout action, for example, if you're using Firebase Authentication:
     FirebaseAuth.instance.signOut();
+    Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginScreen()));
 
 
@@ -162,6 +163,7 @@ class _MenuState extends State<Menu> {
                                         emptySpaces: data[i]['emptySpaces'],
                                         locationUrl: data[i]['locationUrl'],
                                         imageUrl: data[i]['imageUrl'],
+                                        Phone_Number: data[i]['Phone_Number'],
                                       ),
                                     ),
                                   );

@@ -12,6 +12,7 @@ class ParkingPage extends StatefulWidget {
   final int emptySpaces;
   final String locationUrl;
   final String imageUrl;
+  final int Phone_Number ;
 
   const ParkingPage({
     super.key,
@@ -20,6 +21,7 @@ class ParkingPage extends StatefulWidget {
     required this.emptySpaces,
     required this.locationUrl,
     required this.imageUrl,
+    required this.Phone_Number,
   });
 
   @override
@@ -137,6 +139,8 @@ class _ParkingPageState extends State<ParkingPage> {
               Text('Distance: ${widget.distance} km'),
               const SizedBox(height: 10),
               Text('Empty Spaces: ${widget.emptySpaces}'),
+              const SizedBox(height: 10),
+              Text('Phone Number: ${widget.Phone_Number}'),
               const SizedBox(height: 10),
               Row(
                 children: [

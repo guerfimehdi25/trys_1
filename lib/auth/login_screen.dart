@@ -52,6 +52,7 @@ class _loginScreenState extends State<loginScreen> {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
+        Navigator.of(context).popUntil((route) => route.isFirst);
 
         Navigator.pushReplacement(
           context,
