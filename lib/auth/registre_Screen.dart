@@ -468,11 +468,8 @@ class _RegistreState extends State<Registre> {
 
                             else {
                             addUser() ;
-                            Navigator.push(context,
-                                MaterialPageRoute(
-                                  builder: (context) =>  const OSM(),
-                                )
-                            );
+                            Navigator.of(context).popUntil((route) => route.isFirst);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OSM()));
                           }
 
                           } ,

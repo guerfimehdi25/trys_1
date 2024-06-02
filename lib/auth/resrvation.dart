@@ -1,16 +1,16 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:trys_1/auth/Activity.dart';
 import 'package:trys_1/auth/Menu.dart';
 import 'package:trys_1/auth/osm.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:http/http.dart' as http;
-
 
 class Payment {
   final int id;
@@ -36,31 +36,24 @@ class Payment {
 }
 
 class Reservation extends StatefulWidget {
-
   final String name;
-
 
   const Reservation({
     super.key,
     required this.name,
-
   });
+
   @override
   State<Reservation> createState() => _ReservationState();
 }
 
 class _ReservationState extends State<Reservation> {
-
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _obscureText = true;
   int currentIndex = 2;
   late String documentId;
   bool isLoggedIn = false;
-
-
-
-
 
   void updateId(BuildContext context) async {
     // Generate a random number
@@ -94,6 +87,20 @@ class _ReservationState extends State<Reservation> {
     return Payment.fromMap(data);
   }
 
+  Future<void> checkAndAddHourIfNotExists() async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(documentId).get();
+
+    if (!snapshot.exists) {
+      throw Exception('Document does not exist');
+    }
+
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+    if (!data.containsKey('hour')) {
+      await FirebaseFirestore.instance.collection('users').doc(documentId).update({'hour': 0});
+    }
+  }
+
   void onTabTapped(int index) {
     setState(() {
       currentIndex = index;
@@ -106,12 +113,12 @@ class _ReservationState extends State<Reservation> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Activity(name:'', hour:0,)),
+        MaterialPageRoute(builder: (context) => const Activity(name: '', hour: 0)),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Reservation(name:widget.name)),
+        MaterialPageRoute(builder: (context) => Reservation(name: widget.name)),
       );
     } else if (index == 3) {
       Navigator.push(
@@ -149,17 +156,13 @@ class _ReservationState extends State<Reservation> {
     }
   }
 
-
-
   void sendTokenToServer(String token) async {
     var response = await http.post(
       Uri.parse('https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        'token': token,
-      }),
+      body: jsonEncode(<String, String>{'token': token}),
     );
 
     if (response.statusCode == 200) {
@@ -173,7 +176,6 @@ class _ReservationState extends State<Reservation> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     String? validateEmail(String? value) {
@@ -186,9 +188,8 @@ class _ReservationState extends State<Reservation> {
           r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
       final regex = RegExp(pattern);
 
-      return value!.isNotEmpty && !regex.hasMatch(value)
-          ? 'Enter a valid email address'
-          : null;
+
+      return value!.isNotEmpty && !regex.hasMatch(value) ? 'Enter a valid email address' : null;
     }
 
     String? validatePassword(String? value) {
@@ -238,21 +239,25 @@ class _ReservationState extends State<Reservation> {
         child: Column(
           children: [
             Row(
-             mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Reservation for Parking: '),
-                Text(widget.name,style: const TextStyle(color: Colors.blue ,fontWeight: FontWeight.bold),),
+                Text(
+                  widget.name,
+                  style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                ),
               ],
-            ) ,
-
+            ),
             const SizedBox(
               height: 5,
             ),
-            const Text('First to Reserve go to Page Menu and choose your Parking !!',style: TextStyle(color: Colors.red ,fontWeight: FontWeight.bold),),
+            const Text(
+              'First to Reserve go to Page Menu and choose your Parking !!',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(
               height: 5,
             ),
-
             Form(
               autovalidateMode: AutovalidateMode.always,
               child: TextFormField(
@@ -305,33 +310,30 @@ class _ReservationState extends State<Reservation> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {  login(context);
+              onPressed: () {
+                login(context);
 
-    if ( widget.name == "enter name of parking!") {
-    AwesomeDialog(
-    context: context,
-    dialogType: DialogType.error,
-    animType: AnimType.rightSlide,
-    title: 'choose your Parking',
-    desc: 'First you must choose your parking from Menu',
-    btnOkOnPress: () {},
-    ).show();
-    }
-
-
-  } ,
-                style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.amber,
-              foregroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+                if (widget.name == "enter name of parking!") {
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.error,
+                    animType: AnimType.rightSlide,
+                    title: 'choose your Parking',
+                    desc: 'First you must choose your parking from Menu',
+                    btnOkOnPress: () {},
+                  ).show();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
               ),
-            ) ,
               child: const Text('Login', style: TextStyle(fontSize: 20)),
             ),
-
             if (isLoggedIn && widget.name != "enter name of parking!")
-
               FutureBuilder<Payment>(
                 future: getPaymentData(),
                 builder: (context, snapshot) {
@@ -349,12 +351,10 @@ class _ReservationState extends State<Reservation> {
                     child: Column(
                       children: [
                         Text('Current ID: ${payment.id}'),
-
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: ()  {
+                          onPressed: () {
                             updateId(context);
-
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.amber,
@@ -371,28 +371,33 @@ class _ReservationState extends State<Reservation> {
                         const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () async {
-                            updateId(context);
-                            const String url = 'https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN';
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
+                            try {
+                              await checkAndAddHourIfNotExists();
+
+                              const String url = 'https://book.stripe.com/test_fZe9EEa0n2fo9AAcMN';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+
+                              DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(documentId)
+                                  .get();
+                              int hour = documentSnapshot.get('hour');
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Activity(name: widget.name, hour: hour),
+                                ),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Error: $e')),
+                              );
                             }
-                            // Fetch the hour value from Firebase
-                            DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(documentId)
-                                .get();
-                            int hour = documentSnapshot.get('hour');
-
-
-                            // Navigate to the Activity page with the name parameter
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Activity(name:widget.name,hour: hour),
-                              ),
-                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.amber,
@@ -406,7 +411,6 @@ class _ReservationState extends State<Reservation> {
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
-
                       ],
                     ),
                   );
@@ -417,5 +421,4 @@ class _ReservationState extends State<Reservation> {
       ),
     );
   }
-
 }

@@ -1,5 +1,10 @@
 {
   "projects": {
     "default": "flutterlogin-668f6"
+  },
+  "dataconnectEmulatorConfig": {
+    "postgres": {
+      "localConnectionString": "postgresql://localhost:5432?sslmode=disable"
+    }
   }
 }

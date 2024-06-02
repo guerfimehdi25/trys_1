@@ -12,7 +12,7 @@ class ParkingPage extends StatefulWidget {
   final int emptySpaces;
   final String locationUrl;
   final String imageUrl;
-  final int Phone_Number ;
+  final String Phone_Number ;
 
   const ParkingPage({
     super.key,
